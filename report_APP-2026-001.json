@@ -1,0 +1,124 @@
+{
+  "generated_at": "2026-04-26T10:47:15.333186+00:00",
+  "release_id": "APP-2026-001",
+  "application_name": "Customer Portal",
+  "version": "1.0.0",
+  "release_owner": "platform-team@company.com",
+  "sox_in_scope": true,
+  "contains_ai_components": false,
+  "risk_level": "LOW",
+  "risk_score": 27,
+  "compliance_score": 73,
+  "applicable_weight": 110,
+  "failed_weight": 30,
+  "failures_by_phase": {
+    "Testing": [
+      "Security Scan Completed"
+    ],
+    "Operations": [
+      "Access Control Validation (RBAC)"
+    ]
+  },
+  "control_results": [
+    {
+      "control_id": "CODE_REVIEW_APPROVED",
+      "control_name": "Code Review Approval",
+      "sdlc_phase": "Development",
+      "framework": "SOX-ITGC",
+      "status": "PASS",
+      "risk_weight": 15,
+      "description": "All code changes must be peer-reviewed and approved before merging.",
+      "remediation": "",
+      "error": null
+    },
+    {
+      "control_id": "SECURITY_SCAN_COMPLETED",
+      "control_name": "Security Scan Completed",
+      "sdlc_phase": "Testing",
+      "framework": "SOX-ITGC",
+      "status": "FAIL",
+      "risk_weight": 20,
+      "description": "Automated SAST/DAST security scanning must be completed.",
+      "remediation": "Run the required security scanning tools and attach results to the release package.",
+      "error": null
+    },
+    {
+      "control_id": "NO_CRITICAL_VULNERABILITIES",
+      "control_name": "No Critical Vulnerabilities",
+      "sdlc_phase": "Testing",
+      "framework": "SOX-ITGC",
+      "status": "PASS",
+      "risk_weight": 25,
+      "description": "Zero critical CVEs must be present at time of deployment.",
+      "remediation": "",
+      "error": null
+    },
+    {
+      "control_id": "DEPLOYMENT_APPROVED",
+      "control_name": "Deployment Approval (Change Management)",
+      "sdlc_phase": "Deployment",
+      "framework": "SOX-ITGC",
+      "status": "PASS",
+      "risk_weight": 15,
+      "description": "Change Advisory Board (CAB) or designated approver must sign off on deployment.",
+      "remediation": "",
+      "error": null
+    },
+    {
+      "control_id": "RBAC_VALIDATED",
+      "control_name": "Access Control Validation (RBAC)",
+      "sdlc_phase": "Operations",
+      "framework": "SOX-ITGC",
+      "status": "FAIL",
+      "risk_weight": 10,
+      "description": "Role-Based Access Control must be reviewed and validated for least privilege.",
+      "remediation": "Conduct access review and remove excessive permissions. Document RBAC matrix.",
+      "error": null
+    },
+    {
+      "control_id": "LOGGING_ENABLED",
+      "control_name": "Logging and Monitoring Enabled",
+      "sdlc_phase": "Operations",
+      "framework": "SOX-ITGC",
+      "status": "PASS",
+      "risk_weight": 10,
+      "description": "Audit logging and alerting must be active for all in-scope systems.",
+      "remediation": "",
+      "error": null
+    },
+    {
+      "control_id": "SOD_ENFORCED",
+      "control_name": "Segregation of Duties Enforced",
+      "sdlc_phase": "Development",
+      "framework": "SOX-ITGC",
+      "status": "PASS",
+      "risk_weight": 10,
+      "description": "No single individual can both develop and approve changes to production.",
+      "remediation": "",
+      "error": null
+    },
+    {
+      "control_id": "DATA_PRIVACY_ASSESSED",
+      "control_name": "Data Privacy Impact Assessment",
+      "sdlc_phase": "Design",
+      "framework": "GDPR",
+      "status": "PASS",
+      "risk_weight": 5,
+      "description": "A DPIA must be completed if the system processes personal data.",
+      "remediation": "",
+      "error": null
+    },
+    {
+      "control_id": "AI_RISK_ASSESSED",
+      "control_name": "AI Risk Classification (EU AI Act)",
+      "sdlc_phase": "Design",
+      "framework": "EU-AI-Act",
+      "status": "PASS",
+      "risk_weight": 0,
+      "description": "If the system contains AI/ML components, an EU AI Act risk classification must be documented.",
+      "remediation": "",
+      "error": null
+    }
+  ],
+  "recommendation": "APPROVED. All material controls passed. Proceed with standard change management."
+}

@@ -1,0 +1,106 @@
+{
+  "version": "2.0",
+  "framework": "SOX-ITGC + EU-AI-Act",
+  "controls": [
+    {
+      "id": "CODE_REVIEW_APPROVED",
+      "name": "Code Review Approval",
+      "field": "code_review_approved",
+      "field_type": "boolean",
+      "sdlc_phase": "Development",
+      "framework": "SOX-ITGC",
+      "risk_weight": 15,
+      "description": "All code changes must be peer-reviewed and approved before merging.",
+      "remediation": "Ensure a qualified reviewer approves the pull request before deployment."
+    },
+    {
+      "id": "SECURITY_SCAN_COMPLETED",
+      "name": "Security Scan Completed",
+      "field": "security_scan_completed",
+      "field_type": "boolean",
+      "sdlc_phase": "Testing",
+      "framework": "SOX-ITGC",
+      "risk_weight": 20,
+      "description": "Automated SAST/DAST security scanning must be completed.",
+      "remediation": "Run the required security scanning tools and attach results to the release package."
+    },
+    {
+      "id": "NO_CRITICAL_VULNERABILITIES",
+      "name": "No Critical Vulnerabilities",
+      "field": "critical_vulnerabilities",
+      "field_type": "zero_check",
+      "sdlc_phase": "Testing",
+      "framework": "SOX-ITGC",
+      "risk_weight": 25,
+      "description": "Zero critical CVEs must be present at time of deployment.",
+      "remediation": "Remediate or formally accept all critical vulnerabilities with documented risk approval."
+    },
+    {
+      "id": "DEPLOYMENT_APPROVED",
+      "name": "Deployment Approval (Change Management)",
+      "field": "deployment_approved",
+      "field_type": "boolean",
+      "sdlc_phase": "Deployment",
+      "framework": "SOX-ITGC",
+      "risk_weight": 15,
+      "description": "Change Advisory Board (CAB) or designated approver must sign off on deployment.",
+      "remediation": "Submit change request and obtain required approvals before proceeding."
+    },
+    {
+      "id": "RBAC_VALIDATED",
+      "name": "Access Control Validation (RBAC)",
+      "field": "rbac_validated",
+      "field_type": "boolean",
+      "sdlc_phase": "Operations",
+      "framework": "SOX-ITGC",
+      "risk_weight": 10,
+      "description": "Role-Based Access Control must be reviewed and validated for least privilege.",
+      "remediation": "Conduct access review and remove excessive permissions. Document RBAC matrix."
+    },
+    {
+      "id": "LOGGING_ENABLED",
+      "name": "Logging and Monitoring Enabled",
+      "field": "logging_enabled",
+      "field_type": "boolean",
+      "sdlc_phase": "Operations",
+      "framework": "SOX-ITGC",
+      "risk_weight": 10,
+      "description": "Audit logging and alerting must be active for all in-scope systems.",
+      "remediation": "Enable log forwarding to SIEM and configure alert thresholds."
+    },
+    {
+      "id": "SOD_ENFORCED",
+      "name": "Segregation of Duties Enforced",
+      "field": "sod_enforced",
+      "field_type": "boolean",
+      "sdlc_phase": "Development",
+      "framework": "SOX-ITGC",
+      "risk_weight": 10,
+      "description": "No single individual can both develop and approve changes to production.",
+      "remediation": "Review user access to ensure developers cannot self-approve production deployments."
+    },
+    {
+      "id": "DATA_PRIVACY_ASSESSED",
+      "name": "Data Privacy Impact Assessment",
+      "field": "data_privacy_assessed",
+      "field_type": "boolean",
+      "sdlc_phase": "Design",
+      "framework": "GDPR",
+      "risk_weight": 5,
+      "description": "A DPIA must be completed if the system processes personal data.",
+      "remediation": "Complete a Data Privacy Impact Assessment and obtain DPO sign-off."
+    },
+    {
+      "id": "AI_RISK_ASSESSED",
+      "name": "AI Risk Classification (EU AI Act)",
+      "field": "ai_risk_assessed",
+      "field_type": "boolean",
+      "sdlc_phase": "Design",
+      "framework": "EU-AI-Act",
+      "risk_weight": 0,
+      "description": "If the system contains AI/ML components, an EU AI Act risk classification must be documented.",
+      "remediation": "Classify the AI system (Minimal/Limited/High/Unacceptable risk) and document accordingly.",
+      "optional": true
+    }
+  ]
+}

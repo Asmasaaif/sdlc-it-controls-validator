@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IT Controls Report — APP-2026-001</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@300;400;600;700&display=swap');
+
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --surface2: #1c2536;
+    --border: #2d3748;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --accent: #3b82f6;
+    --pass: #22c55e;
+    --fail: #ef4444;
+    --warn: #f59e0b;
+    --risk: #22c55e;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 2rem;
+  }
+
+  .header {
+    border-left: 4px solid var(--accent);
+    padding-left: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .header h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .header .meta {
+    color: var(--muted);
+    font-size: 0.85rem;
+    font-family: 'IBM Plex Mono', monospace;
+    margin-top: 0.4rem;
+  }
+
+  .badges { display: flex; gap: 0.5rem; margin-top: 0.8rem; flex-wrap: wrap; }
+
+  .badge {
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .badge-sox { background: #1e3a5f; color: #60a5fa; border: 1px solid #2563eb; }
+  .badge-ai  { background: #2d1b4e; color: #c084fc; border: 1px solid #7c3aed; }
+
+  .scorecard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .score-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.25rem;
+  }
+
+  .score-card .label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+    font-weight: 600;
+  }
+
+  .score-card .value {
+    font-size: 2.25rem;
+    font-weight: 700;
+    font-family: 'IBM Plex Mono', monospace;
+    line-height: 1.1;
+    margin-top: 0.3rem;
+  }
+
+  .risk-badge {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    background: var(--risk);
+    color: #fff;
+    font-family: 'IBM Plex Mono', monospace;
+    margin-top: 0.4rem;
+  }
+
+  .recommendation {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--risk);
+    border-radius: 8px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+  }
+
+  .recommendation strong { display: block; margin-bottom: 0.4rem; color: var(--risk); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; }
+
+  section { margin-bottom: 2rem; }
+  h2 { font-size: 1rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--muted); margin-bottom: 1rem; font-weight: 600; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+
+  thead tr { background: var(--surface2); }
+  thead th { padding: 0.75rem 1rem; text-align: left; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; }
+
+  tbody tr { border-top: 1px solid var(--border); transition: background 0.15s; }
+  tbody tr:hover { background: var(--surface); }
+  tbody td { padding: 0.75rem 1rem; vertical-align: top; }
+
+  .status-pill {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.2rem 0.55rem;
+    border-radius: 3px;
+    font-family: 'IBM Plex Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+
+  .status-PASS { background: #14532d; color: #4ade80; }
+  .status-FAIL { background: #450a0a; color: #f87171; }
+  .status-NA   { background: #1e2a3a; color: #64748b; }
+
+  .phase-tag { font-size: 0.75rem; color: var(--muted); }
+
+  .remediation { font-size: 0.8rem; color: var(--warn); margin-top: 0.25rem; }
+
+  .failures-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .phase-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem;
+  }
+
+  .phase-block h3 { font-size: 0.8rem; color: var(--muted); margin-bottom: 0.5rem; }
+  .phase-block ul { padding-left: 1rem; font-size: 0.85rem; color: #f87171; }
+  .phase-block li { margin-bottom: 0.2rem; }
+
+  .footer {
+    margin-top: 3rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+
+  .weight-bar {
+    width: 100%;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin-top: 0.4rem;
+  }
+
+  .weight-bar-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: var(--accent);
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>IT Controls Validation Report</h1>
+  <div class="meta">
+    APP-2026-001 &nbsp;·&nbsp; Customer Portal v1.0.0
+    &nbsp;·&nbsp; 2026-04-26 10:47:15 UTC
+  </div>
+  <div class="badges"><span class="badge badge-sox">SOX In-Scope</span></div>
+</div>
+
+<div class="scorecard">
+  <div class="score-card">
+    <div class="label">Risk Level</div>
+    <div class="value" style="color: var(--risk);">LOW</div>
+    <span class="risk-badge">27% risk score</span>
+  </div>
+  <div class="score-card">
+    <div class="label">Compliance Score</div>
+    <div class="value" style="color: var(--pass);">73%</div>
+    <div class="weight-bar"><div class="weight-bar-fill" style="width:73%; background: var(--pass);"></div></div>
+  </div>
+  <div class="score-card">
+    <div class="label">Controls</div>
+    <div class="value">7 / 9</div>
+    <div class="phase-tag">passed</div>
+  </div>
+  <div class="score-card">
+    <div class="label">Release Owner</div>
+    <div class="value" style="font-size:1rem; padding-top:0.5rem;">platform-team@company.com</div>
+  </div>
+</div>
+
+<div class="recommendation">
+  <strong>Recommendation</strong>
+  APPROVED. All material controls passed. Proceed with standard change management.
+</div>
+
+
+<section>
+  <h2>Failures by SDLC Phase</h2>
+  <div class="failures-grid">
+        <div class="phase-block">
+          <h3>🧪 Testing</h3>
+          <ul><li>Security Scan Completed</li></ul>
+        </div>
+
+        <div class="phase-block">
+          <h3>⚙️ Operations</h3>
+          <ul><li>Access Control Validation (RBAC)</li></ul>
+        </div></div>
+</section>
+
+
+<section>
+  <h2>Control Results</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Control</th>
+        <th>Phase</th>
+        <th>Framework</th>
+        <th>Status</th>
+        <th>Weight</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+        <tr>
+          <td>
+            <div><strong>Code Review Approval</strong></div>
+            <div class="phase-tag" style="margin-top:0.2rem;">All code changes must be peer-reviewed and approved before merging.</div>
+            
+          </td>
+          <td><span class="phase-tag">💻 Development</span></td>
+          <td><span class="phase-tag">SOX-ITGC</span></td>
+          <td><span class="status-pill status-PASS">PASS</span></td>
+          <td><span style="font-family:'IBM Plex Mono',monospace;">15%</span></td>
+        </tr>
+
+        <tr>
+          <td>
+            <div><strong>Security Scan Completed</strong></div>
+            <div class="phase-tag" style="margin-top:0.2rem;">Automated SAST/DAST security scanning must be completed.</div>
+            <div class="remediation">⚠ Run the required security scanning tools and attach results to the release package.</div>
+          </td>
+          <td><span class="phase-tag">🧪 Testing</span></td>
+          <td><span class="phase-tag">SOX-ITGC</span></td>
+          <td><span class="status-pill status-FAIL">FAIL</span></td>
+          <td><span style="font-family:'IBM Plex Mono',monospace;">20%</span></td>
+        </tr>
+
+        <tr>
+          <td>
+            <div><strong>No Critical Vulnerabilities</strong></div>
+            <div class="phase-tag" style="margin-top:0.2rem;">Zero critical CVEs must be present at time of deployment.</div>
+            
+          </td>
+          <td><span class="phase-tag">🧪 Testing</span></td>
+          <td><span class="phase-tag">SOX-ITGC</span></td>
+          <td><span class="status-pill status-PASS">PASS</span></td>
+          <td><span style="font-family:'IBM Plex Mono',monospace;">25%</span></td>
+        </tr>
+
+        <tr>
+          <td>
+            <div><strong>Deployment Approval (Change Management)</strong></div>
+            <div class="phase-tag" style="margin-top:0.2rem;">Change Advisory Board (CAB) or designated approver must sign off on deployment.</div>
+            
+          </td>
+          <td><span class="phase-tag">🚀 Deployment</span></td>
+          <td><span class="phase-tag">SOX-ITGC</span></td>
+          <td><span class="status-pill status-PASS">PASS</span></td>
+          <td><span style="font-family:'IBM Plex Mono',monospace;">15%</span></td>
+        </tr>
+
+        <tr>
+          <td>
+            <div><strong>Access Control Validation (RBAC)</strong></div>
+            <div class="phase-tag" style="margin-top:0.2rem;">Role-Based Access Control must be reviewed and validated for least privilege.</div>
+            <div class="remediation">⚠ Conduct access review and remove excessive permissions. Document RBAC matrix.</div>
+          </td>
+          <td><span class="phase-tag">⚙️ Operations</span></td>
+          <td><span class="phase-tag">SOX-ITGC</span></td>
+          <td><span class="status-pill status-FAIL">FAIL</span></td>
+          <td><span style="font-family:'IBM Plex Mono',monospace;">10%</span></td>
+        </tr>
+
+        <tr>
+          <td>
+            <div><strong>Logging and Monitoring Enabled</strong></div>
+            <div class="phase-tag" style="margin-top:0.2rem;">Audit logging and alerting must be active for all in-scope systems.</div>
+            
+          </td>
+          <td><span class="phase-tag">⚙️ Operations</span></td>
+          <td><span class="phase-tag">SOX-ITGC</span></td>
+          <td><span class="status-pill status-PASS">PASS</span></td>
+          <td><span style="font-family:'IBM Plex Mono',monospace;">10%</span></td>
+        </tr>
+
+        <tr>
+          <td>
+            <div><strong>Segregation of Duties Enforced</strong></div>
+            <div class="phase-tag" style="margin-top:0.2rem;">No single individual can both develop and approve changes to production.</div>
+            
+          </td>
+          <td><span class="phase-tag">💻 Development</span></td>
+          <td><span class="phase-tag">SOX-ITGC</span></td>
+          <td><span class="status-pill status-PASS">PASS</span></td>
+          <td><span style="font-family:'IBM Plex Mono',monospace;">10%</span></td>
+        </tr>
+
+        <tr>
+          <td>
+            <div><strong>Data Privacy Impact Assessment</strong></div>
+            <div class="phase-tag" style="margin-top:0.2rem;">A DPIA must be completed if the system processes personal data.</div>
+            
+          </td>
+          <td><span class="phase-tag">📐 Design</span></td>
+          <td><span class="phase-tag">GDPR</span></td>
+          <td><span class="status-pill status-PASS">PASS</span></td>
+          <td><span style="font-family:'IBM Plex Mono',monospace;">5%</span></td>
+        </tr>
+
+        <tr>
+          <td>
+            <div><strong>AI Risk Classification (EU AI Act)</strong></div>
+            <div class="phase-tag" style="margin-top:0.2rem;">If the system contains AI/ML components, an EU AI Act risk classification must b…</div>
+            
+          </td>
+          <td><span class="phase-tag">📐 Design</span></td>
+          <td><span class="phase-tag">EU-AI-Act</span></td>
+          <td><span class="status-pill status-PASS">PASS</span></td>
+          <td><span style="font-family:'IBM Plex Mono',monospace;">0%</span></td>
+        </tr>
+    </tbody>
+  </table>
+</section>
+
+<div class="footer">
+  Generated by sdlc-it-controls-validator v2.0 &nbsp;·&nbsp; Framework: SOX-ITGC + EU-AI-Act + GDPR
+</div>
+
+</body>
+</html>

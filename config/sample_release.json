@@ -1,0 +1,17 @@
+{
+  "release_id": "APP-2026-001",
+  "application_name": "Customer Portal",
+  "version": "1.0.0",
+  "release_owner": "platform-team@company.com",
+  "sox_in_scope": true,
+  "contains_ai_components": false,
+  "code_review_approved": true,
+  "security_scan_completed": false,
+  "critical_vulnerabilities": 0,
+  "deployment_approved": true,
+  "rbac_validated": false,
+  "logging_enabled": true,
+  "sod_enforced": true,
+  "data_privacy_assessed": true,
+  "ai_risk_assessed": false
+}
