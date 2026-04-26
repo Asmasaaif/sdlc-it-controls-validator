@@ -1,9 +1,9 @@
 # SDLC IT Controls Validator
 
-Automated IT General Controls (ITGC) validation tool that evaluates software releases against SOX compliance requirements, EU AI Act regulations, and GDPR standards — producing risk scores and audit-ready reports.
+A Python tool that automates IT General Controls (ITGC) validation for software releases — producing risk scores and audit-style reports. Built as a learning project to explore how SOX controls, SDLC governance, and risk assessment work in practice.
 
 ![Python](https://img.shields.io/badge/Python-3.10+-blue?style=flat-square&logo=python)
-![Framework](https://img.shields.io/badge/Framework-SOX--ITGC-red?style=flat-square)
+![Framework](https://img.shields.io/badge/Inspired%20by-SOX--ITGC-red?style=flat-square)
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 ![Tests](https://img.shields.io/badge/Tests-12%20passing-brightgreen?style=flat-square)
 
@@ -11,27 +11,27 @@ Automated IT General Controls (ITGC) validation tool that evaluates software rel
 
 ## What is this?
 
-In enterprise IT environments, every software release must pass a set of **IT General Controls (ITGCs)** before going live — especially for systems in scope of **SOX (Sarbanes-Oxley Act)**. These controls ensure that:
+Before a software release goes live, IT teams typically run through a checklist of controls — was the code reviewed? Was a security scan completed? Does anyone have access they shouldn't? This process is especially important for systems in scope of **SOX (Sarbanes-Oxley Act)**, where IT General Controls must be documented and tested.
 
-- Code is reviewed and approved before deployment
-- Security scans are completed with no critical vulnerabilities
-- Access controls (RBAC) are validated
-- Audit logging is enabled
-- No single person can both write and approve a change (Segregation of Duties)
+This tool simulates that process. You provide a release manifest (a JSON file describing the state of a release), and the validator checks it against a set of configurable controls — then calculates a risk score and generates a report.
 
-This tool automates that validation process. You provide a release manifest (a JSON file describing the release), and the validator checks it against a configurable set of controls — then generates a risk score, a compliance score, and a detailed audit report.
+Includes simplified control mappings inspired by SOX ITGC, GDPR principles, and emerging AI risk frameworks such as the EU AI Act.
 
 ---
 
-## Why this matters
+## What I implemented
 
-Manual IT controls testing is time-consuming and error-prone. This tool:
+- Designed the control evaluation logic and risk scoring model from scratch
+- Built a config-driven validation engine — controls are defined in JSON, no hardcoded logic in Python
+- Implemented a CLI interface with flexible arguments for custom release paths and output directories
+- Developed an HTML report generator for audit-style outputs
+- Wrote 12 unit tests covering risk classification, partial failures, missing fields, and edge cases
 
-- Saves audit time by automating repetitive control checks
-- Standardises risk scoring across all releases
-- Produces audit-ready reports that can be attached to release packages
-- Integrates with CI/CD pipelines — exits with code `1` on HIGH risk to block deployments automatically
-- Covers emerging regulations like the EU AI Act, flagging AI components that need risk classification
+---
+
+## Why I built this
+
+I wanted to understand how IT risk and compliance teams actually work — specifically how controls are tested, how risk is quantified, and what an audit package looks like. Building this tool forced me to think through real questions: what makes a control fail? How do you weight different risks against each other? What does a useful remediation step look like?
 
 ---
 
@@ -41,19 +41,19 @@ Manual IT controls testing is time-consuming and error-prone. This tool:
 sdlc-it-controls-validator/
 │
 ├── config/
-│   ├── controls.json          # All control definitions (edit here to add/remove controls)
-│   └── sample_release.json    # Example release manifest input
+│   ├── controls.json          # Control definitions — edit here to add or remove controls
+│   └── sample_release.json    # Example release manifest used as input
 │
 ├── core/
-│   └── validator.py           # Core evaluation engine — config-driven, no hardcoded logic
+│   └── validator.py           # Evaluation engine — config-driven, no hardcoded field logic
 │
 ├── reports/
 │   └── html_reporter.py       # Generates a self-contained HTML audit report
 │
 ├── tests/
-│   └── test_validator.py      # 12 unit tests covering all risk scenarios
+│   └── test_validator.py      # Unit tests covering all risk scenarios
 │
-└── main.py                    # CLI entry point — run this to validate a release
+└── main.py                    # CLI entry point
 ```
 
 ---
@@ -62,7 +62,7 @@ sdlc-it-controls-validator/
 
 ### 1. You provide a release manifest
 
-A simple JSON file describing the release state:
+A JSON file describing the current state of a release:
 
 ```json
 {
@@ -86,22 +86,22 @@ A simple JSON file describing the release state:
 
 ### 2. The validator checks each control
 
-Each control has a risk weight — how much it contributes to the overall risk score if it fails. The engine evaluates every control and calculates:
+Each control has a risk weight — how much it contributes to the overall risk score if it fails. The engine calculates:
 
 - **Risk Score** — percentage of weighted controls that failed
 - **Compliance Score** — 100 minus the risk score
-- **Risk Level** — HIGH, MEDIUM, or LOW based on thresholds
+- **Risk Level** — HIGH, MEDIUM, or LOW
 
 ### 3. You get two reports
 
-- **Terminal output** — colour-coded summary with pass/fail per control and remediation steps
-- **HTML report** — professional audit document you can open in any browser
+- **Terminal output** — colour-coded pass/fail per control with remediation guidance
+- **HTML report** — audit-style document you can open in any browser
 
 ---
 
-## Controls Framework
+## Controls
 
-| Control | Framework | SDLC Phase | Risk Weight |
+| Control | Inspired by | SDLC Phase | Risk Weight |
 |---|---|---|---|
 | Code Review Approval | SOX-ITGC | Development | 15% |
 | Security Scan Completed | SOX-ITGC | Testing | 20% |
@@ -110,16 +110,16 @@ Each control has a risk weight — how much it contributes to the overall risk s
 | RBAC / Access Control Validation | SOX-ITGC | Operations | 10% |
 | Logging and Monitoring Enabled | SOX-ITGC | Operations | 10% |
 | Segregation of Duties | SOX-ITGC | Development | 10% |
-| Data Privacy Impact Assessment | GDPR | Design | 5% |
-| AI Risk Classification | EU AI Act | Design | N/A* |
+| Data Privacy Impact Assessment | GDPR principles | Design | 5% |
+| AI Risk Classification | EU AI Act frameworks | Design | N/A* |
 
-*The AI Risk Classification control is optional — it is only evaluated when `contains_ai_components` is set to `true` in the release manifest.
+*The AI control is optional — only evaluated when `contains_ai_components` is `true`.
 
 ---
 
-## Risk Scoring Logic
+## Risk Scoring
 
-| Risk Score | Risk Level | Recommendation |
+| Risk Score | Level | Output |
 |---|---|---|
 | 60% or above | HIGH | Block deployment. Escalate to IT Risk and Compliance. |
 | 30% to 59% | MEDIUM | Conditional release. Document compensating controls. |
@@ -131,51 +131,37 @@ Each control has a risk weight — how much it contributes to the overall risk s
 
 ### Prerequisites
 
-- Python 3.10 or later — download at [python.org](https://python.org/downloads)
-- Git (optional, for cloning)
+- Python 3.10 or later — [python.org](https://python.org/downloads)
 
 ### Installation
-
-Clone the repository:
 
 ```bash
 git clone https://github.com/Asmasaaif/sdlc-it-controls-validator.git
 cd sdlc-it-controls-validator
-```
-
-Install dependencies:
-
-```bash
 pip install pytest
 ```
 
-No other dependencies required.
-
-### Running the validator
+### Run the validator
 
 ```bash
 python main.py
 ```
 
-This validates `config/sample_release.json` against `config/controls.json` and produces:
+Produces a terminal report plus two files: a JSON report and an HTML report.
 
-- A colour-coded report in your terminal
-- `report_APP-2026-001.json` — machine-readable audit report
-- `report_APP-2026-001.html` — open in your browser for the full visual report
-
-### Custom release path
+### Custom paths
 
 ```bash
-python main.py --release path/to/your_release.json --controls config/controls.json --out ./reports
+python main.py --release path/to/release.json --controls config/controls.json --out ./reports
 ```
 
 ### CI/CD integration
 
 ```bash
-python main.py && echo "Safe to deploy" || echo "Deployment blocked — HIGH risk"
+python main.py && echo "Safe to deploy" || echo "Deployment blocked"
 ```
 
-The tool exits with code `1` on HIGH risk and `0` otherwise, making it straightforward to integrate into GitHub Actions, Jenkins, GitLab CI, or any other pipeline.
+Exits with code `1` on HIGH risk, `0` otherwise.
 
 ---
 
@@ -184,8 +170,6 @@ The tool exits with code `1` on HIGH risk and `0` otherwise, making it straightf
 ```bash
 python -m pytest tests/ -v
 ```
-
-Expected output:
 
 ```
 tests/test_validator.py::TestClassifyRisk::test_high_risk        PASSED
@@ -196,13 +180,11 @@ tests/test_validator.py::TestEvaluateControls::test_all_fail     PASSED
 12 passed in 0.09s
 ```
 
-The test suite covers all risk thresholds, partial failures, missing fields, zero-check controls, phase grouping, report structure, and recommendation logic.
-
 ---
 
 ## Adding a New Control
 
-All controls are data-driven in `config/controls.json` — no Python code changes required. Add a new object to the `controls` array:
+Controls are defined in `config/controls.json` — no Python changes needed. Add an object to the array:
 
 ```json
 {
@@ -218,7 +200,13 @@ All controls are data-driven in `config/controls.json` — no Python code change
 }
 ```
 
-Then add the corresponding field to your release manifest and run the validator.
+Then add the field to your release manifest and run.
+
+---
+
+## Limitations
+
+This tool simulates IT control validation using simplified inputs. It does not replace real audit procedures, evidence collection, or regulatory compliance assessments. The control mappings are inspired by real frameworks but are not a substitute for formal compliance programmes.
 
 ---
 
@@ -227,7 +215,6 @@ Then add the corresponding field to your release manifest and run the validator.
 - GitHub Actions workflow for automated CI/CD gating
 - Multi-release batch validation
 - Excel export for audit workpapers
-- Web dashboard UI
 - NIST CSF and ISO 27001 control mappings
 
 ---
@@ -241,7 +228,7 @@ MIT License — free to use, modify, and distribute.
 ## Author
 
 **Asma Saif**  
-Cybersecurity and IT Risk | SOX-ITGC | EU AI Act | SDLC Compliance
+Cybersecurity and IT Risk | SOX-ITGC | SDLC Compliance | GRC
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Asma%20Saif-0077B5?style=flat-square&logo=linkedin)](https://www.linkedin.com/in/asmasaifcyber/)
 [![GitHub](https://img.shields.io/badge/GitHub-Asmasaaif-181717?style=flat-square&logo=github)](https://github.com/Asmasaaif)
